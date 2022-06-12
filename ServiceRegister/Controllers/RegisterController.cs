@@ -19,7 +19,36 @@ namespace ServiceRegister.Controllers
                 Address = new Uri("http://2.2.2.2/"),
                 LastHeartBeat = DateTime.Now,
                 RegisterDate = DateTime.Now,
-                Name = "Nazwa"
+                Name = "Service1"
+            },
+            new ServiceInfo()
+            {
+                Address = new Uri("http://190.190.190.190:100"),
+                LastHeartBeat = null,
+                RegisterDate = new DateTime(2000, 07, 23),
+                Name = "Service2"
+            },
+            new ServiceInfo()
+            {
+                Address = new Uri("https://190.190.190.190:200"),
+                LastHeartBeat = null,
+                RegisterDate = new DateTime(2000, 07, 23),
+                Name = "Service3"
+            },
+            new ServiceInfo()
+            {
+                Address = new Uri("http://190.190.190.190:300"),
+                LastHeartBeat = null,
+                RegisterDate = new DateTime(2000, 07, 23),
+                Name = "Service4"
+            }
+            ,
+            new ServiceInfo()
+            {
+                Address = new Uri("http://190.190.190.191:100"),
+                LastHeartBeat = null,
+                RegisterDate = new DateTime(2000, 07, 23),
+                Name = "Service5"
             }
         };
 
@@ -27,6 +56,46 @@ namespace ServiceRegister.Controllers
         public IEnumerable<ServiceInfo> Get()
         {
             return services;
+        }
+
+        [HttpGet("byName/{name}")]
+        public ActionResult<ServiceInfo> GetByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest(new { message = "Name was empty" });
+
+            var obj = services.Where(srv => srv.Name == name);
+
+            if (obj == null || !obj.Any())
+                return NotFound(new { message = $"Service named {name} not found" });
+
+            if (obj.Count() > 1)
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Found more then one service named {name}" });
+
+            return Ok(obj.Single());
+        }
+
+        [HttpGet("byUri/{address}")]
+        public ActionResult<ServiceInfo> GetByAddress(string address)
+        {
+            var escapedAddress = Uri.UnescapeDataString(address);
+
+            if (!Uri.TryCreate(escapedAddress, UriKind.Absolute, out Uri? uri) || uri == null)
+                return BadRequest(new { message = $"Address {escapedAddress} is not valid" });
+
+            UriComponents searchType;
+
+            if (uri.OriginalString.Count(ch => ch == ':') > 1)
+                searchType = UriComponents.HostAndPort;
+            else
+                searchType = UriComponents.Host;
+
+            var obj = services.Where(srv => Uri.Compare(srv.Address, uri, searchType, UriFormat.UriEscaped, StringComparison.InvariantCultureIgnoreCase) == 0);
+
+            if (obj == null || !obj.Any())
+                return NotFound(new { message = $"Service with address {escapedAddress} not found" });
+
+            return Ok(obj);
         }
 
         [HttpPost]
