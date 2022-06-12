@@ -4,6 +4,7 @@ using ServiceRegister.Extensions;
 using ServiceRegister.Models;
 using System.Net;
 using System.Text.Json;
+using static ServiceRegister.Extensions.Extensions;
 
 namespace ServiceRegister.Controllers
 {
@@ -33,7 +34,7 @@ namespace ServiceRegister.Controllers
         {
             var addResults = services.Add(info);
 
-            if (addResults.Count() == 1 && addResults.First() == Extensions.Extensions.ValidationResult.Success)
+            if (addResults.Count() == 1 && addResults.First() == ValidationResult.Success)
                 return Ok();
 
             var returnMessage = new

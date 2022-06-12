@@ -36,23 +36,31 @@ namespace RegisterTests
         [Test]
         public void ListNull()
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             List<ServiceInfo> list = null;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             ServiceInfoDTO dto = new()
             {
                 Address = "http://1.1.1.1",
                 Name = "valid name"
             };
 
+#pragma warning disable CS8604 // Possible null reference argument.
             Assert.Throws(typeof(ArgumentNullException), delegate { list.Add(dto); });
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         [Test]
         public void ObjectNull()
         {
             List<ServiceInfo> list = new();
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             ServiceInfoDTO dto = null;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
+#pragma warning disable CS8604 // Possible null reference argument.
             var addResult = list.Add(dto);
+#pragma warning restore CS8604 // Possible null reference argument.
             Assert.That(addResult.Single(), Is.EqualTo(ValidationResult.SourceNull));
         }
 
@@ -74,11 +82,13 @@ namespace RegisterTests
         public void Name_Null()
         {
             List<ServiceInfo> list = new();
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             ServiceInfoDTO dto = new()
             {
                 Address = "http://1.1.1.1",
                 Name = null
             };
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             var addResult = list.Add(dto);
             Assert.That(addResult.Single(), Is.EqualTo(ValidationResult.NameEmpty));
