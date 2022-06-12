@@ -9,6 +9,8 @@ namespace ServiceRegister.Extensions
         {
             Success = 0,
             SourceNull,
+            NameEmpty,
+            NameTooShort,
             NameAlreadyExist,
             AddressAlreadyExist,
             AddressBadFormat
@@ -23,6 +25,11 @@ namespace ServiceRegister.Extensions
                 return Enumerable.Repeat(ValidationResult.SourceNull, 1);
 
             List<ValidationResult> result = new();
+
+            if (string.IsNullOrWhiteSpace(info.Name))
+                result.Add(ValidationResult.NameEmpty);
+            else if (info.Name.Length < DataRequirements.MinLength)
+                result.Add(ValidationResult.NameTooShort);
 
             if (list.Any(srv => srv.Name == info.Name))
                 result.Add(ValidationResult.NameAlreadyExist);
@@ -49,6 +56,11 @@ namespace ServiceRegister.Extensions
             list.Add(infoToAdd);
 
             return Enumerable.Repeat(ValidationResult.Success, 1);
+        }
+
+        public static IEnumerable<ValidationResult> AddRange(this List<ServiceInfo> list, IEnumerable<ServiceInfoDTO> info)
+        {
+            throw new NotImplementedException();
         }
     }
 }

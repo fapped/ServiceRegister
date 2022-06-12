@@ -1,4 +1,6 @@
-﻿namespace ServiceRegister.Models
+﻿using ServiceRegister.DTO;
+
+namespace ServiceRegister.Models
 {
     public class ServiceInfo
     {
