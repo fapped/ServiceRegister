@@ -113,5 +113,26 @@ namespace ServiceRegister.Controllers
 
             return BadRequest(returnMessage);
         }
+
+        [HttpDelete("{name}")]
+        public IActionResult Unregister(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest(new { message = "Name was empty" });
+
+            var serviceCount = services.Where(srv => srv.Name == name).ToList();
+
+            if (serviceCount.Count == 0)
+                return NotFound(new { message = $"Service name {name} not found" });
+
+            if (serviceCount.Count > 1)
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Found more then one service named {name}" });
+
+            var objToDelete = serviceCount.Single();
+            services.Remove(objToDelete);
+            objToDelete.Dispose();
+
+            return Ok();
+        }
     }
 }
