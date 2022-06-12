@@ -50,7 +50,7 @@ namespace ServiceRegister.Extensions
                 Address = uri,
                 Name = info.Name,
                 RegisterDate = DateTime.Now,
-                LastHeartBeat = null
+                LastHeartBeatRequest = null
             };
 
             list.Add(infoToAdd);

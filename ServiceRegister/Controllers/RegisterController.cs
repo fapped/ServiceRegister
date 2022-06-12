@@ -17,28 +17,28 @@ namespace ServiceRegister.Controllers
             new ServiceInfo()
             {
                 Address = new Uri("http://2.2.2.2/"),
-                LastHeartBeat = DateTime.Now,
+                LastHeartBeatRequest = null,
                 RegisterDate = DateTime.Now,
                 Name = "Service1"
             },
             new ServiceInfo()
             {
                 Address = new Uri("http://190.190.190.190:100"),
-                LastHeartBeat = null,
+                LastHeartBeatRequest = null,
                 RegisterDate = new DateTime(2000, 07, 23),
                 Name = "Service2"
             },
             new ServiceInfo()
             {
                 Address = new Uri("https://190.190.190.190:200"),
-                LastHeartBeat = null,
+                LastHeartBeatRequest = null,
                 RegisterDate = new DateTime(2000, 07, 23),
                 Name = "Service3"
             },
             new ServiceInfo()
             {
                 Address = new Uri("http://190.190.190.190:300"),
-                LastHeartBeat = null,
+                LastHeartBeatRequest = null,
                 RegisterDate = new DateTime(2000, 07, 23),
                 Name = "Service4"
             }
@@ -46,7 +46,7 @@ namespace ServiceRegister.Controllers
             new ServiceInfo()
             {
                 Address = new Uri("http://190.190.190.191:100"),
-                LastHeartBeat = null,
+                LastHeartBeatRequest = null,
                 RegisterDate = new DateTime(2000, 07, 23),
                 Name = "Service5"
             }
