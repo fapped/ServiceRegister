@@ -91,7 +91,6 @@ namespace ServiceRegister.Controllers
 
             var objToDelete = serviceCount.Single();
             serviceCollector.Remove(objToDelete);
-            objToDelete.Dispose();
 
             return Ok();
         }

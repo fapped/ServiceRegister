@@ -95,17 +95,29 @@ namespace ServiceRegister.Helpers
                 LastHeartBeatRequest = null
             };
 
+            infoToAdd.LongNotResponding += InfoToAdd_LongNotResponding;
+
+            services.Add(infoToAdd);
+
 #if DEBUG
             Console.WriteLine($"{infoToAdd.Name} {infoToAdd.Address} added!");
 #endif
 
-            services.Add(infoToAdd);
-
             return Enumerable.Repeat(ValidationResult.Success, 1);
+        }
+
+        private void InfoToAdd_LongNotResponding(ServiceInfo serviceInfo)
+        {
+            Console.WriteLine($"{DateTime.Now} Removing {serviceInfo.Name} - no reponse since {serviceInfo.LastHeartBeatCorrect} with timeout {ServiceInfo.invalidationTime}");
+            Remove(serviceInfo);
         }
 
         public bool Remove(ServiceInfo info)
         {
+            if (info is null)
+                return false;
+
+            info.Dispose();
             return services.Remove(info);
         }
     }
