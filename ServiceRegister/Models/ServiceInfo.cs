@@ -1,5 +1,4 @@
-﻿using ServiceRegister.DTO;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ServiceRegister.Models
 {

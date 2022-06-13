@@ -1,7 +1,4 @@
 using ServiceRegister.DTO;
-using ServiceRegister.Models;
-using ServiceRegister.Extensions;
-using static ServiceRegister.Extensions.Extensions;
 using ServiceRegister.Helpers;
 using static ServiceRegister.Helpers.ServiceCollector;
 
