@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceRegister.DTO;
-using ServiceRegister.Extensions;
+using ServiceRegister.Helpers;
 using ServiceRegister.Models;
-using System.Net;
-using System.Text.Json;
-using static ServiceRegister.Extensions.Extensions;
+using static ServiceRegister.Helpers.ServiceCollector;
 
 namespace ServiceRegister.Controllers
 {
@@ -12,45 +10,8 @@ namespace ServiceRegister.Controllers
     [Route("[controller]")]
     public class RegisterController : ControllerBase
     {
-        static List<ServiceInfo> services = new List<ServiceInfo>()
-        {
-            new ServiceInfo()
-            {
-                Address = new Uri("http://2.2.2.2/"),
-                LastHeartBeatRequest = null,
-                RegisterDate = DateTime.Now,
-                Name = "Service1"
-            },
-            new ServiceInfo()
-            {
-                Address = new Uri("http://190.190.190.190:100"),
-                LastHeartBeatRequest = null,
-                RegisterDate = new DateTime(2000, 07, 23),
-                Name = "Service2"
-            },
-            new ServiceInfo()
-            {
-                Address = new Uri("https://190.190.190.190:200"),
-                LastHeartBeatRequest = null,
-                RegisterDate = new DateTime(2000, 07, 23),
-                Name = "Service3"
-            },
-            new ServiceInfo()
-            {
-                Address = new Uri("http://190.190.190.190:300"),
-                LastHeartBeatRequest = null,
-                RegisterDate = new DateTime(2000, 07, 23),
-                Name = "Service4"
-            }
-            ,
-            new ServiceInfo()
-            {
-                Address = new Uri("http://190.190.190.191:100"),
-                LastHeartBeatRequest = null,
-                RegisterDate = new DateTime(2000, 07, 23),
-                Name = "Service5"
-            }
-        };
+        static ServiceCollector serviceCollector = new();
+        IReadOnlyCollection<ServiceInfo> services => serviceCollector.Services();
 
         [HttpGet]
         public IEnumerable<ServiceInfo> Get()
@@ -101,7 +62,7 @@ namespace ServiceRegister.Controllers
         [HttpPost]
         public IActionResult AddServiceInfo([FromBody] ServiceInfoDTO info)
         {
-            var addResults = services.Add(info);
+            var addResults = serviceCollector.Add(info);
 
             if (addResults.Count() == 1 && addResults.First() == ValidationResult.Success)
                 return Ok();
@@ -129,7 +90,7 @@ namespace ServiceRegister.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Found more then one service named {name}" });
 
             var objToDelete = serviceCount.Single();
-            services.Remove(objToDelete);
+            serviceCollector.Remove(objToDelete);
             objToDelete.Dispose();
 
             return Ok();
