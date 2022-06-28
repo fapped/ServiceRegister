@@ -64,7 +64,8 @@ namespace ServiceRegister.Controllers
         {
             var addResults = serviceCollector.Add(info);
 
-            if (addResults.Count() == 1 && addResults.First() == ValidationResult.Success)
+            if (addResults.Count() == 1 &&
+                (addResults.First() == ValidationResult.Success || addResults.First() == ValidationResult.AlreadyExist))
                 return Ok();
 
             var returnMessage = new

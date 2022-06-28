@@ -13,7 +13,8 @@ namespace ServiceRegister.Helpers
             NameTooShort,
             NameAlreadyExist,
             AddressAlreadyExist,
-            AddressBadFormat
+            AddressBadFormat,
+            AlreadyExist
         }
 
         private readonly List<ServiceInfo> services = new List<ServiceInfo>();
@@ -67,6 +68,15 @@ namespace ServiceRegister.Helpers
                 return Enumerable.Repeat(ValidationResult.SourceNull, 1);
 
             List<ValidationResult> result = new();
+
+            var exist = services.FirstOrDefault(srv => srv.Equals(info));
+
+            if (exist != null)
+            {
+                exist.Update();
+                result.Add(ValidationResult.AlreadyExist);
+                return result;
+            }
 
             if (string.IsNullOrWhiteSpace(info.Name))
                 result.Add(ValidationResult.NameEmpty);
